@@ -2,7 +2,6 @@ import json
 import numpy as np
 from ripser import ripser
 import matplotlib.pyplot as plt
-import persim as sim
 
 # Set up parameters
 sample_rate = 1000
@@ -59,7 +58,7 @@ for i in range(len(vibration_signal_samples) - 1):
     
 radius = 1e6
 tda_window = 0.01  # in seconds
-sim_time = 10
+sim_time = 5
 
 # Extract a window for TDA
 number_of_samples_in_window = int(sample_rate * tda_window)
@@ -94,8 +93,24 @@ for window_number in range(n_windows):
         plt.show()
 
 # Plot pin position over time
-plt.figure()
-plt.plot(time_pin[:n_windows], pin_position[:n_windows])
-plt.xlabel('Time (s)')
-plt.ylabel('Displacement (m)')
+# =============================================================================
+# plt.figure()
+# plt.plot(time_pin[:n_windows], pin_position[:n_windows])
+# plt.xlabel('Time (s)')
+# plt.ylabel('Displacement (m)')
+# plt.show()
+# =============================================================================
+# Plot pin position and longest persistence over time on the same graph
+fig, ax1 = plt.subplots()
+
+# Plot pin position, shifted to start at 0
+ax1.plot(time_pin[:n_windows]-1, pin_position[:n_windows], color='b')
+ax1.set_xlabel('Time (s)')
+ax1.set_ylabel('Pin Position (m)', color='b')
+
+# Create a secondary y-axis for longest persistence
+ax2 = ax1.twinx()
+ax2.plot(np.arange(n_windows) / sample_rate, longest_distances[:n_windows], color='r')
+ax2.set_ylabel('Longest Persistence', color='r')
+
 plt.show()
